@@ -4,13 +4,36 @@ const Title = ({ text }) => {
   return <h2>{text}</h2>;
 };
 
-import React from "react";
-
 const Button = ({ handleClick, text }) => {
   return <button onClick={handleClick}>{text}</button>;
 };
 
-const Statistics = ({ text, value }) => {
+const Statistics = (props) => {
+  if (props.all.length === 0) {
+    return <p>No feedback given yet</p>;
+  }
+  return (
+    <>
+      <StatisticsLine text="Good" value={props.good} />
+      <StatisticsLine text="Neutral" value={props.neutral} />
+      <StatisticsLine text="Bad" value={props.bad} />
+      <StatisticsLine text="All" value={props.all.length} />
+      <StatisticsLine
+        text="Average"
+        value={props.all.reduce((a, b) => a + b, 0) / props.all.length}
+      />
+      <StatisticsLine
+        text="Positive percentage"
+        value={(props.good / props.all.length) * 100}
+      />
+    </>
+  );
+};
+
+const StatisticsLine = ({ text, value }) => {
+  if (!value) {
+    return <p>No {text} value given yet</p>;
+  }
   return (
     <p>
       {text}: {value}
@@ -54,15 +77,7 @@ const App = () => {
       <Button handleClick={handleNeutralVote} text="Neutral" />
       <Button handleClick={handleBadVote} text="Bad" />
       <Title text="Statistics" />
-      <Statistics text="Good" value={good} />
-      <Statistics text="Neutral" value={neutral} />
-      <Statistics text="Bad" value={bad} />
-      <Statistics text="All" value={all.length} />
-      <Statistics
-        text="Average"
-        value={all.reduce((a, b) => a + b, 0) / all.length}
-      />
-      <Statistics text="Positive" value={(good / all.length) * 100 + "%"} />
+      <Statistics all={all} good={good} neutral={neutral} bad={bad} />
     </>
   );
 };
