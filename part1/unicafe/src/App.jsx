@@ -14,30 +14,39 @@ const Statistics = (props) => {
   }
   return (
     <>
-      <StatisticsLine text="Good" value={props.good} />
-      <StatisticsLine text="Neutral" value={props.neutral} />
-      <StatisticsLine text="Bad" value={props.bad} />
-      <StatisticsLine text="All" value={props.all.length} />
-      <StatisticsLine
-        text="Average"
-        value={props.all.reduce((a, b) => a + b, 0) / props.all.length}
-      />
-      <StatisticsLine
-        text="Positive percentage"
-        value={(props.good / props.all.length) * 100}
-      />
+      <table>
+        <tbody>
+          <StatisticsLine text="Good" value={props.good} />
+          <StatisticsLine text="Neutral" value={props.neutral} />
+          <StatisticsLine text="Bad" value={props.bad} />
+          <StatisticsLine text="All" value={props.all.length} />
+          <StatisticsLine
+            text="Average"
+            value={props.all.reduce((a, b) => a + b, 0) / props.all.length}
+          />
+          <StatisticsLine
+            text="Positive percentage"
+            value={(props.good / props.all.length) * 100}
+          />
+        </tbody>
+      </table>
     </>
   );
 };
 
 const StatisticsLine = ({ text, value }) => {
   if (!value) {
-    return <p>No {text} value given yet</p>;
+    return (
+      <tr>
+        <td>No {text} value given yet</td>
+      </tr>
+    );
   }
   return (
-    <p>
-      {text}: {value}
-    </p>
+    <tr>
+      <td>{text}:</td>
+      <td>{Number.isInteger(value) ? value : value.toFixed(2)}</td>
+    </tr>
   );
 };
 
