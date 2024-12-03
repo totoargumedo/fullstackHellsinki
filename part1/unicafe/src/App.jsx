@@ -10,7 +10,7 @@ const Button = ({ handleClick, text }) => {
   return <button onClick={handleClick}>{text}</button>;
 };
 
-const VoteResult = ({ text, value }) => {
+const Statistics = ({ text, value }) => {
   return (
     <p>
       {text}: {value}
@@ -54,15 +54,15 @@ const App = () => {
       <Button handleClick={handleNeutralVote} text="Neutral" />
       <Button handleClick={handleBadVote} text="Bad" />
       <Title text="Statistics" />
-      <VoteResult text="Good" value={good} />
-      <VoteResult text="Neutral" value={neutral} />
-      <VoteResult text="Bad" value={bad} />
-      <VoteResult text="All" value={all.length} />
-      <VoteResult
+      <Statistics text="Good" value={good} />
+      <Statistics text="Neutral" value={neutral} />
+      <Statistics text="Bad" value={bad} />
+      <Statistics text="All" value={all.length} />
+      <Statistics
         text="Average"
         value={all.reduce((a, b) => a + b, 0) / all.length}
       />
-      <VoteResult text="Positive" value={(good / all.length) * 100 + "%"} />
+      <Statistics text="Positive" value={(good / all.length) * 100 + "%"} />
     </>
   );
 };
