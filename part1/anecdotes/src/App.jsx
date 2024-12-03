@@ -32,17 +32,27 @@ const App = () => {
     "If you don’t handle errors, errors will handle you.",
     "Make it work, make it right, make it fast.",
   ];
+
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
 
   const getRandomQuote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length);
     setSelected(randomIndex);
   };
 
+  const handleVotes = (anecdoteIndex) => {
+    const newVotes = [...votes];
+    newVotes[anecdoteIndex] += 1;
+    setVotes(newVotes);
+  };
+
   return (
     <>
       <p>{anecdotes[selected]}</p>
+      <p>Has {votes[selected]} votes</p>
       <Button handleClick={getRandomQuote} text="Next Anecdote" />
+      <Button handleClick={() => handleVotes(selected)} text="Vote" />
     </>
   );
 };
