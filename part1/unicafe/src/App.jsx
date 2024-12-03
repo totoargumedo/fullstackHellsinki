@@ -22,36 +22,47 @@ const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
+  const [all, setAll] = useState([]);
 
-  const handleClickVote = (vote) => {
-    switch (vote) {
-      case "good":
-        const goodVote = good + 1;
-        setGood(goodVote);
-        break;
-      case "neutral":
-        const neutralVote = neutral + 1;
-        setNeutral(neutralVote);
-        break;
-      case "bad":
-        const badVote = bad + 1;
-        setBad(badVote);
-        break;
-      default:
-        break;
-    }
+  const updateAllVotes = (vote) => {
+    const updatedAllVotes = all.concat(vote);
+    setAll(updatedAllVotes);
+  };
+
+  const handleGoodVote = () => {
+    const updatedVote = good + 1;
+    setGood(updatedVote);
+    updateAllVotes(1);
+  };
+
+  const handleNeutralVote = () => {
+    const updatedVote = neutral + 1;
+    setNeutral(updatedVote);
+    updateAllVotes(0);
+  };
+
+  const handleBadVote = () => {
+    const updatedVote = bad + 1;
+    setBad(updatedVote);
+    updateAllVotes(-1);
   };
 
   return (
     <>
       <Title text="Give Feedback" />
-      <Button handleClick={() => handleClickVote("good")} text="Good" />
-      <Button handleClick={() => handleClickVote("neutral")} text="Neutral" />
-      <Button handleClick={() => handleClickVote("bad")} text="Bad" />
+      <Button handleClick={handleGoodVote} text="Good" />
+      <Button handleClick={handleNeutralVote} text="Neutral" />
+      <Button handleClick={handleBadVote} text="Bad" />
       <Title text="Statistics" />
       <VoteResult text="Good" value={good} />
       <VoteResult text="Neutral" value={neutral} />
       <VoteResult text="Bad" value={bad} />
+      <VoteResult text="All" value={all.length} />
+      <VoteResult
+        text="Average"
+        value={all.reduce((a, b) => a + b, 0) / all.length}
+      />
+      <VoteResult text="Positive" value={(good / all.length) * 100 + "%"} />
     </>
   );
 };
