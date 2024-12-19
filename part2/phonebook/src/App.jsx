@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import PhoneNumberList from "./components/PhonenumberList";
 import SearchPerson from "./components/SearchPersonForm";
 import AddPersonForm from "./components/AddPersonForm";
 import Subtitle from "./components/Subtitle";
+import personsService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      const personsGet = response.data;
+    personsService.getAll().then((response) => {
+      const personsGet = response;
       setPersons(personsGet);
     });
   }, []);
@@ -37,14 +37,12 @@ const App = () => {
       name: newName,
       number: newNumber,
     };
-    axios
-      .post("http://localhost:3001/persons", personObject)
-      .then((response) => {
-        const updatedPersons = persons.concat(response.data);
-        setPersons(updatedPersons);
-        setNewName("");
-        setNewNumber("");
-      });
+    personsService.create(personObject).then((response) => {
+      const updatedPersons = persons.concat(response);
+      setPersons(updatedPersons);
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   const handleNameChange = (event) => {
