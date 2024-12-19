@@ -1,10 +1,15 @@
 import PhoneNumber from "./PhoneNumberItem";
 
-const PhoneNumberList = ({ persons }) => {
+const PhoneNumberList = (props) => {
+  const { persons, handleRemovePerson } = props;
   return (
     <>
       {persons.map((person) => (
-        <PhoneNumber key={person.name} person={person} />
+        <PhoneNumber
+          key={person.name}
+          person={person}
+          handleRemovePerson={handleRemovePerson}
+        />
       ))}
     </>
   );

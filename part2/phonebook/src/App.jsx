@@ -57,6 +57,17 @@ const App = () => {
     setFilter(event.target.value);
   };
 
+  const removePerson = (id) => {
+    const confirmRemove = window.confirm("Do you want to remove this person?");
+    if (!confirmRemove) {
+      return;
+    }
+    personsService.remove(id).then(() => {
+      const updatedPersons = persons.filter((person) => person.id !== id);
+      setPersons(updatedPersons);
+    });
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -71,7 +82,10 @@ const App = () => {
       <Subtitle text="Search" />
       <SearchPerson handleSearchChange={searchPerson} />
       <Subtitle text="Number" />
-      <PhoneNumberList persons={filteredPersons} />
+      <PhoneNumberList
+        persons={filteredPersons}
+        handleRemovePerson={removePerson}
+      />
     </div>
   );
 };
