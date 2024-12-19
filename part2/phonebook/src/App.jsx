@@ -26,10 +26,24 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
 
-    const nameExists = persons.some((person) => person.name === newName);
+    const personExists = persons.find((person) => person.name === newName);
 
-    if (nameExists) {
-      alert(`${newName} is already added to the phonebook`);
+    if (personExists) {
+      const confirmUpdate = window.confirm(
+        "This person already exists. Do you want to update the number?"
+      );
+      if (!confirmUpdate) {
+        return;
+      }
+      const changedPerson = { ...personExists, number: newNumber };
+      personsService.update(personExists.id, changedPerson).then((response) => {
+        const updatedPersons = persons.map((person) =>
+          person.id !== personExists.id ? person : response
+        );
+        setPersons(updatedPersons);
+        setNewName("");
+        setNewNumber("");
+      });
       return;
     }
 
