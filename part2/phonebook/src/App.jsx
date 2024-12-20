@@ -3,11 +3,13 @@ import PhoneNumberList from "./components/PhonenumberList";
 import SearchPerson from "./components/SearchPersonForm";
 import AddPersonForm from "./components/AddPersonForm";
 import Subtitle from "./components/Subtitle";
+import Notification from "./components/Notification";
 import personsService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filter, setFilter] = useState("");
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     personsService.getAll().then((response) => {
@@ -43,6 +45,7 @@ const App = () => {
         setPersons(updatedPersons);
         setNewName("");
         setNewNumber("");
+        handleMessageChange(`Updated ${response.name}`);
       });
       return;
     }
@@ -56,7 +59,15 @@ const App = () => {
       setPersons(updatedPersons);
       setNewName("");
       setNewNumber("");
+      handleMessageChange(`Added ${response.name}`);
     });
+  };
+
+  const handleMessageChange = (message) => {
+    setMessage(message);
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
   };
 
   const handleNameChange = (event) => {
@@ -85,6 +96,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Subtitle text="Add new phone" />
       <AddPersonForm
         handleOnSubmit={addPerson}
