@@ -2,22 +2,33 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import CountryList from "./components/CountryList";
 import CountryCard from "./components/CountryCard";
+const weather_api_key = import.meta.env.VITE_SOME_KEY;
 
 function App() {
   const [search, setSearch] = useState("");
   const [countries, setCountries] = useState([]);
   const [showInfo, setShowInfo] = useState(null);
+  const [weather, setWeather] = useState(null);
   const filteredCountries = countries.filter((country) =>
     country.name.common.toLowerCase().includes(search.toLowerCase())
   );
 
   useEffect(() => {
+    if (showInfo) {
+      axios
+        .get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${showInfo.capital[0]}&APPID=${weather_api_key}`
+        )
+        .then((response) => {
+          setWeather(response.data);
+        });
+    }
     axios
       .get("https://studies.cs.helsinki.fi/restcountries/api/all")
       .then((response) => {
         setCountries(response.data);
       });
-  }, []);
+  }, [showInfo]);
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
@@ -61,7 +72,7 @@ function App() {
           />
         )}
       </div>
-      {showInfo ? <CountryCard country={showInfo} /> : null}
+      {showInfo ? <CountryCard country={showInfo} weather={weather} /> : null}
     </div>
   );
 }
