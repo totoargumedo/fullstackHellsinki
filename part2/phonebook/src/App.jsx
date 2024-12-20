@@ -9,7 +9,7 @@ import personsService from "./services/persons";
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filter, setFilter] = useState("");
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState({ content: null, type: null });
 
   useEffect(() => {
     personsService.getAll().then((response) => {
@@ -38,15 +38,27 @@ const App = () => {
         return;
       }
       const changedPerson = { ...personExists, number: newNumber };
-      personsService.update(personExists.id, changedPerson).then((response) => {
-        const updatedPersons = persons.map((person) =>
-          person.id !== personExists.id ? person : response
-        );
-        setPersons(updatedPersons);
-        setNewName("");
-        setNewNumber("");
-        handleMessageChange(`Updated ${response.name}`);
-      });
+      personsService
+        .update(personExists.id, changedPerson)
+        .then((response) => {
+          const updatedPersons = persons.map((person) =>
+            person.id !== personExists.id ? person : response
+          );
+          setPersons(updatedPersons);
+          setNewName("");
+          setNewNumber("");
+          handleMessageChange(`Updated ${response.name}`, "success");
+        })
+        .catch(() => {
+          handleMessageChange(
+            `Information of ${personExists.name} has already been removed from the server`,
+            "error"
+          );
+          const updatedPersons = persons.filter(
+            (person) => person.id !== personExists.id
+          );
+          setPersons(updatedPersons);
+        });
       return;
     }
 
@@ -59,14 +71,16 @@ const App = () => {
       setPersons(updatedPersons);
       setNewName("");
       setNewNumber("");
-      handleMessageChange(`Added ${response.name}`);
+      handleMessageChange(`Added ${response.name}`, "success");
     });
   };
 
-  const handleMessageChange = (message) => {
-    setMessage(message);
+  const handleMessageChange = (content, type) => {
+    const newMessage = { content, type };
+    setMessage(newMessage);
     setTimeout(() => {
-      setMessage(null);
+      const updatedMessage = { ...message, content: null };
+      setMessage(updatedMessage);
     }, 5000);
   };
 
